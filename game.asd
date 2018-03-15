@@ -14,7 +14,9 @@
                #:dirt
                #:nineveh
                #:temporal-functions
-               #:cepl.skitter.sdl2)
+               #:cepl.skitter.sdl2
+               #:defpackage-plus)
   :serial t
   :components ((:file "package")
+               (:file "util")
                (:file "game")))
