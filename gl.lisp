@@ -1,0 +1,31 @@
+(in-package #:lafps)
+
+
+(c:defun-g vert2 ((vert c:g-pnt)
+                  &uniform
+                  (now :float)
+                  (persp :mat4)
+                  (cam :mat4)
+                  (obj :mat4))
+  (let* ((id vari:gl-instance-id)
+         (now (+ now id))
+         (pos (c:pos vert))
+         (color (+ pos (vari:vec3 0.5 0.5 0.5)))
+         #+(or)(pos (+ pos (vari:vec3 (* 2 (sin now))
+                                (cos now)
+                                (- (* 0.5 (sin (* 5 now)))
+                                   6))))
+         (pos (* pos 5))
+         (pos (vari:vec4 pos 1))
+         (pos (* obj pos))
+         (pos (* cam pos))
+         (pos (* persp pos)))
+    (values pos
+            (c:tex vert))))
+(c:defun-g frag2 ((uv :vec2)
+                  &uniform
+                  (sam :sampler-2d))
+  (vari:texture sam uv))
+(c:defpipeline-g pipe2 ()
+  (vert2 c:g-pnt)
+  (frag2 :vec2))

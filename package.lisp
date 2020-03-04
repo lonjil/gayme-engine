@@ -1,20 +1,17 @@
 ;;;; package.lisp
-(in-package :defpackage+-user-1)
+(in-package :cl-user)
 
-(defpackage+ #:game
-  (:use #:cl
-        #:cepl
-        #:livesupport
-        #:bind
-        #:nineveh
-        #:temporal-functions
-        #:box.math.vari
-        #:skitter
-        #:cepl.skitter)
-  (:local-nicknames (#:v2 #:box.math.vec2)
-                    (#:v3 #:box.math.vec3)
-                    (#:v4 #:box.math.vec4)
-                    (#:q #:box.math.quat)
-                    (#:m2 #:box.math.mat2)
-                    (#:m3 #:box.math.mat3)
-                    (#:m4 #:box.math.mat4)))
+(defpackage #:lafps
+  (:use #:cl)
+  (:local-nicknames
+   (#:c #:cepl)
+   (#:sr #:serapeum)
+   (#:m4 #:origin.mat4)
+   (#:m3 #:origin.mat3)
+   (#:v2 #:origin.vec2)
+   (#:v3 #:origin.vec3)
+   (#:v4 #:origin.vec4)
+   (#:q #:origin.quat)
+   (#:s #:skitter)
+   (#:k #:skitter.sdl2.keys)
+   (#:t #:temporal-functions)))
