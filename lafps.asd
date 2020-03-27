@@ -8,8 +8,8 @@
                #:varjo
                #:cepl.sdl2
                #:origin
-               #:serapeum
                #:dirt
+               #:metabang-bind
                #:nineveh
                #:temporal-functions
                #:cepl.skitter.sdl2)
@@ -20,8 +20,12 @@
                (:file "util")
                (:file "input")
                (:file "space")
+               (:file "time")
                (:file "physics")
                (:file "camera")
+               (:file "shader")
+               (:file "rendering")
                (:file "player")
+               (:file "misc")
                (:file "game")
                ))

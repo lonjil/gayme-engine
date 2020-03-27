@@ -49,44 +49,43 @@
    :scale 1.0f0)
   (:documentation "A world object that can be drawn"))
 
+(defvar *things* nil)
 (defun populate (&optional (c 100))
   (loop :repeat c
         :do (push (make-instance
-                   'thing :sampler *sam* :stream (cube-stream)
-                   :rot (q:random) :pos (v3:vec (- (random 100) 50)
-                                                 (- (random 100) 50)
-                                                 (- -5 (random 10))))
+                   'thing :sampler *sam*
+                   :stream (cube-stream)
+                   :rot (q:random)
+                   :pos (v3:vec (- (random 100) 50)
+                                (- (random 100) 50)
+                                (- -5 (random 10))))
                   *things*)))
 
 (defvar *camera* (make-instance 'camera))
 (defvar *camera2* (make-instance 'camera))
 (defvar *current-camera* *camera*)
 
-(defvar *delta* 1)
-(defvar *fps* 0)
-(defvar *fps-wip* 0)
-(defvar *stepper* (t:make-stepper (t:seconds 1)))
 
 
 (defun model->world (thing)
   (m4:* (m4:set-translation m4:+id+ (pos thing))
         (m4:* (q:to-mat4 (rot thing))
               (m4:set-scale m4:+id+ (v3:scale (v3:vec 1 1 1)
-                                                     (scale thing))))))
+                                              (scale thing))))))
 
-(defun set-draw-params (&optional *camera*)
-  (c:map-g #'pipe2 nil
-           :now (now)
+(defun set-draw-params (prog &optional *camera*)
+  (c:map-g prog nil
            :persp (m4:set-projection/perspective
                    (radians 60.0)
                    (/ (c:viewport-resolution-x (c:current-viewport))
                       (c:viewport-resolution-y (c:current-viewport)))
                    0.01
                    400.0)
-           :cam (foop *camera*)))
+           :cam (foop *camera*)
+           :light (v3:vec 1 1 1)))
 (defgeneric draw (foo))
 (defmethod draw ((thing thing))
-  (c:map-g #'pipe2 (buf-stream thing)
+  (c:map-g #'vert-lit (buf-stream thing)
            :obj (model->world thing)
            :sam (sampler thing)))
 
@@ -101,11 +100,13 @@
   (setf (c:resolution (c:current-viewport))
         (c:surface-resolution (c:current-surface (c:cepl-context))))
   (c:clear)
-  (set-draw-params *camera*)
+  (set-draw-params #'vert-lit *camera*)
+  (set-draw-params #'lamp *camera*)
   #+(or)(c:map-g #'pipe2 *stream*
-           :obj m4:+id+
+           :obj m4:+id
            :sam *sam*)
   (loop :for x :in *things* :do (draw x))
+  (draw *light*)
   (c:swap))
 
 (defun init ()

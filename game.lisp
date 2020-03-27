@@ -9,22 +9,16 @@
 (defvar *running* nil) ; are we running?
 
 
-(defvar *dt* 0.1f0)
-(defun clamp (min max val)
-  (max min (min (min max val))))
-
-(defvar *things* nil)
 
 
 
-(defun now ()
-  (/ (float (get-internal-real-time))
-     1000))
+
 (defun step-demo ()
   (declare (optimize (debug 3)))
   (livesupport:update-repl-link)
   (render)
-  (do-input))
+  (do-input)
+  (apply-input *camera*))
 
 (defun run-loop ()
   (when *running* (return-from run-loop))
